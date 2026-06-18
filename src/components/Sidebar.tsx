@@ -1,4 +1,6 @@
 import { BookOpen, MessageCircle, Moon, Nfc, Plus, Search, Settings, Sparkles, Sun, Tag } from 'lucide-react';
+import { useI18n } from '../i18n/I18nContext';
+import type { Language } from '../i18n/translations';
 
 interface SidebarProps {
   activeTab: string;
@@ -8,16 +10,24 @@ interface SidebarProps {
   onToggleDarkMode: () => void;
 }
 
-const navItems = [
-  { id: 'notes', label: '我的笔记', icon: BookOpen },
-  { id: 'search', label: '智能搜索', icon: Search },
-  { id: 'ai-chat', label: 'AI 问答', icon: MessageCircle },
-  { id: 'tags', label: '标签管理', icon: Tag },
-  { id: 'insights', label: '知识洞察', icon: Sparkles },
-  { id: 'nfc', label: 'NFC 工具', icon: Nfc },
-];
+const langLabels: Record<Language, string> = {
+  'zh-CN': '简体中文',
+  'zh-TW': '繁體中文',
+  'en': 'English',
+};
 
 export default function Sidebar({ activeTab, onTabChange, onNewNote, isDarkMode, onToggleDarkMode }: SidebarProps) {
+  const { t, lang, setLang } = useI18n();
+
+  const navItems = [
+    { id: 'notes', label: t('myNotes'), icon: BookOpen },
+    { id: 'search', label: t('search'), icon: Search },
+    { id: 'ai-chat', label: t('aiChat'), icon: MessageCircle },
+    { id: 'tags', label: t('tags'), icon: Tag },
+    { id: 'insights', label: t('insights'), icon: Sparkles },
+    { id: 'nfc', label: t('nfcTools'), icon: Nfc },
+  ];
+
   return (
     <aside className="w-64 bg-white border-r border-[var(--color-rule)] flex flex-col h-screen sticky top-0">
       {/* Logo */}
@@ -27,8 +37,8 @@ export default function Sidebar({ activeTab, onTabChange, onNewNote, isDarkMode,
             <Sparkles className="w-5 h-5 text-white" />
           </div>
           <div>
-            <h1 className="font-bold text-lg text-[var(--color-ink)] leading-tight">智汇笔记</h1>
-            <p className="text-xs text-[var(--color-muted)]">AI 知识管理助手</p>
+            <h1 className="font-bold text-lg text-[var(--color-ink)] leading-tight">{t('appName')}</h1>
+            <p className="text-xs text-[var(--color-muted)]">{t('appSubtitle')}</p>
           </div>
         </div>
       </div>
@@ -40,7 +50,7 @@ export default function Sidebar({ activeTab, onTabChange, onNewNote, isDarkMode,
           className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-primary-light)] hover:from-[var(--color-primary-dark)] hover:to-[var(--color-primary)] text-white font-medium py-2.5 px-4 rounded-xl transition-all shadow-md shadow-[var(--color-primary)]/20 hover:shadow-lg hover:shadow-[var(--color-primary)]/30"
         >
           <Plus className="w-4 h-4" />
-          新建笔记
+          {t('newNote')}
         </button>
       </div>
 
@@ -73,12 +83,23 @@ export default function Sidebar({ activeTab, onTabChange, onNewNote, isDarkMode,
           className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-[var(--color-muted)] hover:bg-[var(--color-surface-2)] hover:text-[var(--color-ink)] transition-colors"
         >
           {isDarkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
-          {isDarkMode ? '浅色模式' : '深色模式'}
+          {isDarkMode ? t('lightMode') : t('darkMode')}
         </button>
-        <button className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-[var(--color-muted)] hover:bg-[var(--color-surface-2)] hover:text-[var(--color-ink)] transition-colors">
+        {/* Language Switcher */}
+        <div className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-[var(--color-muted)]">
           <Settings className="w-4 h-4" />
-          设置
-        </button>
+          <span className="text-xs">{t('settings')}</span>
+          <div className="flex-1" />
+          <select
+            value={lang}
+            onChange={(e) => setLang(e.target.value as Language)}
+            className="text-xs bg-[var(--color-surface-2)] rounded-md px-2 py-1 border border-[var(--color-rule)] text-[var(--color-ink)] cursor-pointer"
+          >
+            <option value="zh-CN">{langLabels['zh-CN']}</option>
+            <option value="zh-TW">{langLabels['zh-TW']}</option>
+            <option value="en">{langLabels['en']}</option>
+          </select>
+        </div>
       </div>
     </aside>
   );
