@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import type { Note } from './types';
 import { mockNotes } from './data/mockData';
+import { I18nProvider, useI18n } from './i18n/I18nContext';
 import Sidebar from './components/Sidebar';
 import MobileNav from './components/MobileNav';
 import NoteList from './components/NoteList';
@@ -12,7 +13,8 @@ import NoteDetail from './components/NoteDetail';
 import DailyReview from './components/DailyReview';
 import { FileText } from 'lucide-react';
 
-function App() {
+function AppContent() {
+  const { t } = useI18n();
   const [notes, setNotes] = useState<Note[]>(() => {
     const saved = localStorage.getItem('zhihuinotes-data');
     return saved ? JSON.parse(saved) : mockNotes;
@@ -166,8 +168,8 @@ function App() {
             <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-[var(--color-primary)]/20 to-[var(--color-primary-light)]/20 flex items-center justify-center mb-4">
               <FileText className="w-10 h-10 text-[var(--color-primary)]" />
             </div>
-            <p className="text-lg font-medium">选择一篇笔记查看详情</p>
-            <p className="text-sm mt-2">或点击"新建笔记"开始记录</p>
+            <p className="text-lg font-medium">{t('selectNote')}</p>
+            <p className="text-sm mt-2">{t('orCreate')}</p>
           </div>
         );
 
@@ -184,8 +186,8 @@ function App() {
         return (
           <div className="flex flex-col h-full bg-white">
             <div className="px-4 md:px-6 py-4 border-b border-[var(--color-rule)]">
-              <h2 className="font-semibold text-[var(--color-ink)]">智能搜索</h2>
-              <p className="text-xs text-[var(--color-muted)]">支持全文搜索、标签搜索</p>
+              <h2 className="font-semibold text-[var(--color-ink)]">{t('search')}</h2>
+              <p className="text-xs text-[var(--color-muted)]">{t('searchPlaceholder')}</p>
             </div>
             <NoteList
               notes={notes}
@@ -205,8 +207,8 @@ function App() {
         return (
           <div className="flex flex-col h-full bg-white overflow-y-auto">
             <div className="px-4 md:px-6 py-4 border-b border-[var(--color-rule)]">
-              <h2 className="font-semibold text-[var(--color-ink)]">标签管理</h2>
-              <p className="text-xs text-[var(--color-muted)]">共 {allTags.length} 个标签</p>
+              <h2 className="font-semibold text-[var(--color-ink)]">{t('tags')}</h2>
+              <p className="text-xs text-[var(--color-muted)]">{t('noteCount', { count: allTags.length })}</p>
             </div>
             <div className="p-4 md:p-6">
               <div className="flex flex-wrap gap-3">
@@ -290,6 +292,14 @@ function App() {
         />
       )}
     </div>
+  );
+}
+
+function App() {
+  return (
+    <I18nProvider>
+      <AppContent />
+    </I18nProvider>
   );
 }
 
