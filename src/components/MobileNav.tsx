@@ -1,4 +1,5 @@
 import { BookOpen, MessageCircle, Nfc, Plus, Search, Sparkles } from 'lucide-react';
+import { useI18n } from '../i18n/I18nContext';
 
 interface MobileNavProps {
   activeTab: string;
@@ -6,15 +7,17 @@ interface MobileNavProps {
   onNewNote: () => void;
 }
 
-const navItems = [
-  { id: 'notes', label: '笔记', icon: BookOpen },
-  { id: 'search', label: '搜索', icon: Search },
-  { id: 'new', label: '新建', icon: Plus, isAction: true },
-  { id: 'ai-chat', label: 'AI', icon: MessageCircle },
-  { id: 'nfc', label: 'NFC', icon: Nfc },
-];
-
 export default function MobileNav({ activeTab, onTabChange, onNewNote }: MobileNavProps) {
+  const { t } = useI18n();
+
+  const navItems = [
+    { id: 'notes', label: t('mobileNavNotes'), icon: BookOpen },
+    { id: 'search', label: t('mobileNavSearch'), icon: Search },
+    { id: 'new', label: t('newNote'), icon: Plus, isAction: true },
+    { id: 'ai-chat', label: t('mobileNavAI'), icon: MessageCircle },
+    { id: 'nfc', label: t('mobileNavNFC'), icon: Nfc },
+  ];
+
   return (
     <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-[var(--color-rule)] z-50 safe-area-pb">
       <div className="flex items-center justify-around h-16">
